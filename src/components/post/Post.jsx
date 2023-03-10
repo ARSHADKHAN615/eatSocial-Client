@@ -3,21 +3,21 @@ import { Link } from "react-router-dom";
 import "./post.scss";
 import Comments from "../comments/Comments";
 import { format } from "timeago.js";
-import { dislikePost, getLikes, likePost } from "../../api";
+import { deletePost, dislikePost, getLikes, likePost } from "../../api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../context/authContext";
+import { message } from "antd";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
+  const [deleteMenu, setDeleteMenu] = useState(false);
+
   const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const postId = post?.id;
 
   // Get Post Likes
-  const {
-    data: likes,
-    isFetching,
-  } = useQuery({
+  const { data: likes, isFetching } = useQuery({
     queryKey: ["likes", postId],
     queryFn: getLikes,
     enabled: !!postId,
@@ -25,6 +25,23 @@ const Post = ({ post }) => {
       message.error(error.response?.data.error || error.message);
     },
   });
+
+  // Handle Delete Post
+  const deletePostMutation = useMutation(
+    (postId) =>  deletePost(postId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("posts");
+        message.success("Post deleted successfully");
+      },
+      onError: (error) => {
+        message.error(error.response.data.error || "Something went wrong");
+      },
+    }
+  );
+  const handleDelete = (postId) => {
+    deletePostMutation.mutate(postId);
+  };
 
   // Handle Like and Dislike Post
   const mutation = useMutation(
@@ -69,7 +86,20 @@ const Post = ({ post }) => {
               <span className="date">{format(post.createdAt)} </span>
             </div>
           </div>
-          <i className="ri-more-fill"></i>
+          <div className="options">
+            {currentUser.id === post.userId && (
+              <i
+                className="ri-more-fill"
+                style={{ cursor: "pointer" }}
+                onClick={() => setDeleteMenu((prev) => !prev)}
+              ></i>
+            )}
+            {deleteMenu && (
+              <button className="delete" onClick={() => handleDelete(post.id)}>
+                Delete
+              </button>
+            )}
+          </div>
         </div>
         <div className="content">
           <p>{post.desc}</p>
@@ -78,7 +108,7 @@ const Post = ({ post }) => {
         <div className="info">
           <div className="item">
             {isFetching ? (
-            <i className="ri-loader-line"></i>
+              <i className="ri-loader-line"></i>
             ) : likes?.includes(currentUser.id) ? (
               <i
                 className="ri-heart-fill"

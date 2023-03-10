@@ -12,10 +12,13 @@ import {
   unfollowUser,
 } from "../../api";
 import demoCover from "../../assets/demoCover.svg";
+import UpdateProfile from "../../components/UpdateProfile";
+import { useState } from "react";
 
 const Profile = () => {
   const { currentUser } = useAuth();
   const { userId } = useParams();
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Get UserProfile Information
@@ -67,6 +70,7 @@ const Profile = () => {
   const handleFollow = () => {
     mutation.mutate(followers?.includes(currentUser.id));
   };
+
   return (
     <div className="profile">
       <div className="images">
@@ -110,7 +114,12 @@ const Profile = () => {
               )}
             </div>
             {userId == currentUser.id ? (
-              <button>Edit Profile</button>
+              <button
+                className="edit"
+                onClick={() => setIsUpdateModalOpen(true)}
+              >
+                Edit Profile
+              </button>
             ) : !followers?.includes(currentUser.id) ? (
               <button className="follow" onClick={handleFollow}>
                 Follow
@@ -128,6 +137,11 @@ const Profile = () => {
         </div>
         <Posts userId={userId} />
       </div>
+      <UpdateProfile
+        isOpen={isUpdateModalOpen}
+        setIsOpen={setIsUpdateModalOpen}
+        profile={profile}
+      />
     </div>
   );
 };

@@ -6,6 +6,7 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    'Access-Control-Allow-Origin': '*',
   },
 });
 // Posts Endpoints
@@ -14,6 +15,9 @@ export const getPosts = async (userId) => {
 };
 export const createPost = async (newPost) => {
   return await api.post("/posts", newPost);
+};
+export const deletePost = async (postId) => {
+  return await api.delete(`posts/${postId}`);
 };
 
 // Comments Endpoints
@@ -41,6 +45,9 @@ export const dislikePost = async (postId) => {
 export const getProfile = async (queryKey) => {
   const userId = queryKey.queryKey[1];
   return (await api.get(`user/${userId}`)).data;
+};
+export const updateProfile = async (updatedUser) => {
+  return await api.put(`user`, updatedUser);
 };
 export const getFollowers = async (queryKey) => {
   const userId = queryKey.queryKey[1];

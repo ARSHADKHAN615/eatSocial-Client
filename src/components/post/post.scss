@@ -41,6 +41,18 @@
             }
           }
         }
+        .options {
+          position: relative;
+        }
+        .delete {
+          cursor: pointer;
+          background-color: red;
+          border-color: red;
+          color: white;
+          position: absolute;
+          right: 0px;
+          top: 20px;
+        }
       }
 
       .content {

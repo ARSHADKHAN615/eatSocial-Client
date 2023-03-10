@@ -5,7 +5,6 @@ import { getPosts } from "../../api";
 import { message } from "antd";
 
 const Posts = ({ userId }) => {
-  console.log(userId);
   const {
     data: posts,
     error,
