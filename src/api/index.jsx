@@ -63,3 +63,14 @@ export const unfollowUser = async (userId) => {
 export const followUser = async (userId) => {
   return (await api.post(`user/${userId}/followers`)).data;
 };
+
+// Cart Endpoints
+export const getCart = async () => {
+  return (await api.get(`cart`)).data;
+};
+export const addToCart = async (item) => {
+  return await api.post(`cart`, item);
+};
+export const removeFromCart = async (itemId) => {
+  return await api.delete(`cart/${itemId}`);
+};

@@ -12,7 +12,7 @@ import {
   unfollowUser,
 } from "../../api";
 import demoCover from "../../assets/demoCover.svg";
-import UpdateProfile from "../../components/UpdateProfile";
+import UpdateProfile from "../../components/formModel/UpdateProfile";
 import { useState } from "react";
 
 const Profile = () => {

@@ -7,6 +7,7 @@ import { deletePost, dislikePost, getLikes, likePost } from "../../api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../context/authContext";
 import { message } from "antd";
+import AddToCard from "../AddToCard";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -27,18 +28,15 @@ const Post = ({ post }) => {
   });
 
   // Handle Delete Post
-  const deletePostMutation = useMutation(
-    (postId) =>  deletePost(postId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("posts");
-        message.success("Post deleted successfully");
-      },
-      onError: (error) => {
-        message.error(error.response.data.error || "Something went wrong");
-      },
-    }
-  );
+  const deletePostMutation = useMutation((postId) => deletePost(postId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("posts");
+      message.success("Post deleted successfully");
+    },
+    onError: (error) => {
+      message.error(error.response.data.error || "Something went wrong");
+    },
+  });
   const handleDelete = (postId) => {
     deletePostMutation.mutate(postId);
   };
@@ -102,9 +100,11 @@ const Post = ({ post }) => {
           </div>
         </div>
         <div className="content">
+          <p>{post?.title}</p>
+          <img src={post.img} alt="" />
           <p>{post.desc}</p>
-          <img src={"/uploads/" + post.img} alt="" />
         </div>
+        {post.is_for_sell == 1 && <AddToCard post={post} />}
         <div className="info">
           <div className="item">
             {isFetching ? (

@@ -1,20 +1,23 @@
 import { Button, Form, Input, Modal, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateProfile } from "../api";
-import { useFirebase } from "../context/FirebaseContext";
-import { useAuth } from "../context/authContext";
+import { updateProfile } from "../../api";
+import { useFirebase } from "../../context/FirebaseContext";
+import { useAuth } from "../../context/authContext";
 
 const UpdateProfile = ({ isOpen, setIsOpen, profile }) => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const { setCurrentUser } = useAuth();
   const { customUpload } = useFirebase();
+  
 
+  // Handle Modal Close
   const handleCancel = () => {
     setIsOpen(false);
   };
+
+  // Handle User Profile Update
   const mutation = useMutation((updatedUser) => updateProfile(updatedUser), {
     onSuccess: (data) => {
       queryClient.invalidateQueries("profile");
@@ -26,12 +29,12 @@ const UpdateProfile = ({ isOpen, setIsOpen, profile }) => {
       message.error(error.response.data.error || "Something went wrong");
     },
   });
-
   const onFinish = (values) => {
     mutation.mutate(values);
     // console.log("Success:", values);
   };
 
+  
   const initialValues = {
     name: profile?.name,
     city: profile?.city,

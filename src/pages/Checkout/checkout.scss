@@ -1,0 +1,13 @@
+@import "../../style.scss";
+
+.checkout {
+  @include themify($themes) {
+    background-color: themed("bgSoft");
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    h1 {
+      color: themed("textColor");
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@import "../../style.scss";
+
+.cart {
+  @include themify($themes) {
+    background-color: themed("bgSoft");
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+  }
+
+  .cart-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+}
