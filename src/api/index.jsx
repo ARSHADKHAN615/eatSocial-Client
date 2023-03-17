@@ -9,6 +9,15 @@ export const api = axios.create({
     'Access-Control-Allow-Origin': '*',
   },
 });
+
+// Users Endpoints
+export const getUsers = async (queryKey) => {
+  const searchQuery = queryKey.queryKey[1];
+  return (await api.get(`users?search=${searchQuery}`)).data;
+};
+
+
+
 // Posts Endpoints
 export const getPosts = async (userId) => {
   return (await api.get("posts?userId=" + userId)).data;
@@ -18,6 +27,9 @@ export const createPost = async (newPost) => {
 };
 export const deletePost = async (postId) => {
   return await api.delete(`posts/${postId}`);
+};
+export const updatePost = async (updatedPost) => {
+  return await api.put(`posts/${updatedPost.id}`, updatedPost);
 };
 
 // Comments Endpoints
@@ -55,7 +67,7 @@ export const getFollowers = async (queryKey) => {
 };
 export const getFollowing = async (queryKey) => {
   const userId = queryKey.queryKey[1];
-  return (await api.get(`user/${userId}/following`)).data;
+  return (await api.get(`user/${userId}/following?type=onlyId`)).data;
 };
 export const unfollowUser = async (userId) => {
   return (await api.delete(`user/${userId}/followers`)).data;
@@ -73,4 +85,17 @@ export const addToCart = async (item) => {
 };
 export const removeFromCart = async (itemId) => {
   return await api.delete(`cart/${itemId}`);
+};
+
+// Orders Endpoints
+export const getOrders = async () => {
+  return (await api.get(`orders`)).data;
+};
+export const placeOrder = async (order) => {
+  return await api.post(`orders`, order);
+};
+
+
+// Get Countries
+export const getCountries = async () => {
 };

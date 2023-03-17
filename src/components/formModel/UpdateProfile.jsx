@@ -10,7 +10,6 @@ const UpdateProfile = ({ isOpen, setIsOpen, profile }) => {
   const queryClient = useQueryClient();
   const { setCurrentUser } = useAuth();
   const { customUpload } = useFirebase();
-  
 
   // Handle Modal Close
   const handleCancel = () => {
@@ -23,7 +22,7 @@ const UpdateProfile = ({ isOpen, setIsOpen, profile }) => {
       queryClient.invalidateQueries("profile");
       message.success("Profile updated successfully");
       handleCancel();
-      setCurrentUser((prev) => ({ ...prev, name: form.getFieldValue("name") }));
+      setCurrentUser(data.data);
     },
     onError: (error) => {
       message.error(error.response.data.error || "Something went wrong");
@@ -34,7 +33,6 @@ const UpdateProfile = ({ isOpen, setIsOpen, profile }) => {
     // console.log("Success:", values);
   };
 
-  
   const initialValues = {
     name: profile?.name,
     city: profile?.city,
@@ -63,6 +61,7 @@ const UpdateProfile = ({ isOpen, setIsOpen, profile }) => {
 
   const propsUpload = {
     onChange(info) {
+      console.log(info);
       if (info.file.status !== "uploading") {
         // console.log(info.file, info.fileList);
       }
@@ -72,7 +71,10 @@ const UpdateProfile = ({ isOpen, setIsOpen, profile }) => {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
-    beforeUpload(file) {
+    onRemove(file) {
+      console.log(file);
+    },
+    beforeUpload(file, fileList) {
       const isJpgOrPng =
         file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {

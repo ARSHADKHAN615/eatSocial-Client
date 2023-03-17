@@ -5,6 +5,7 @@ import { useDarkMode } from "../../context/darkModeContext";
 import { useAuth } from "../../context/authContext";
 import { useQuery } from "@tanstack/react-query";
 import { getCart } from "../../api";
+import { useCart } from "../../context/cartContext";
 const { Search } = Input;
 
 const NavBar = () => {
@@ -12,13 +13,7 @@ const NavBar = () => {
   const { currentUser } = useAuth();
 
   // Get Cart Count
-  const { data: cartCount, isFetching } = useQuery({
-    queryKey: ["cart_count"],
-    queryFn: getCart,
-    onError: (error) => {
-      message.error(error.response?.data.error || error.message);
-    },
-  });
+  const { cart : cartCount } = useCart();
 
   return (
     <div className="navbar">
@@ -33,13 +28,13 @@ const NavBar = () => {
           style={{ cursor: "pointer" }}
         ></i>
         <i className="ri-menu-line"></i>
-        <div className="search">
+        {/* <div className="search">
           <Search
             placeholder="input search text"
             allowClear
             className="searchInput"
           />
-        </div>
+        </div> */}
       </div>
       <div className="right">
         <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}>

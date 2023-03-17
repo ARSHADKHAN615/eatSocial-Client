@@ -6,26 +6,20 @@ import { format } from "timeago.js";
 import { deletePost, dislikePost, getLikes, likePost } from "../../api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../context/authContext";
-import { message } from "antd";
+import { Dropdown, Modal, message } from "antd";
 import AddToCard from "../AddToCard";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import HandlePost from "../formModel/HandlePost";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [deleteMenu, setDeleteMenu] = useState(false);
-
+  const [modal, contextHolder] = Modal.useModal();
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const postId = post?.id;
 
-  // Get Post Likes
-  const { data: likes, isFetching } = useQuery({
-    queryKey: ["likes", postId],
-    queryFn: getLikes,
-    enabled: !!postId,
-    onError: (error) => {
-      message.error(error.response?.data.error || error.message);
-    },
-  });
 
   // Handle Delete Post
   const deletePostMutation = useMutation((postId) => deletePost(postId), {
@@ -58,9 +52,42 @@ const Post = ({ post }) => {
     }
   );
   const handleLike = () => {
-    mutation.mutate(likes?.includes(currentUser.id));
+    mutation.mutate(post?.likes?.includes(currentUser.id));
   };
 
+  const confirm = () => {
+    modal.confirm({
+      title: "Are you sure delete this post?",
+      icon: <ExclamationCircleOutlined />,
+      okText: "Yes",
+      cancelText: "No",
+      okButtonProps: {
+        danger: true,
+      },
+      onOk() {
+        handleDelete(postId);
+      },
+    });
+  };
+
+  const items = [
+    {
+      label: (
+        <>
+          <i
+            onClick={confirm}
+            className="ri-delete-bin-2-line"
+            style={{ fontSize: "1.2rem" }}
+          ></i>
+        </>
+      ),
+      key: "0",
+    },
+    {
+      label: <i className="ri-edit-box-line" onClick={() => setIsPostModalOpen(true)} style={{ fontSize: "1.2rem" }}></i>,
+      key: "1",
+    },
+  ];
   return (
     <div className="post">
       <div className="container">
@@ -86,17 +113,26 @@ const Post = ({ post }) => {
           </div>
           <div className="options">
             {currentUser.id === post.userId && (
-              <i
-                className="ri-more-fill"
-                style={{ cursor: "pointer" }}
-                onClick={() => setDeleteMenu((prev) => !prev)}
-              ></i>
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                trigger={["click"]}
+                arrow
+              >
+                <i className="ri-more-fill" style={{ cursor: "pointer" }}></i>
+              </Dropdown>
+              // <i
+              //   className="ri-more-fill"
+              //   style={{ cursor: "pointer" }}
+              //   onClick={() => setDeleteMenu((prev) => !prev)}
+              // ></i>
             )}
-            {deleteMenu && (
+            {/* {deleteMenu && (
               <button className="delete" onClick={() => handleDelete(post.id)}>
                 Delete
               </button>
-            )}
+            )} */}
           </div>
         </div>
         <div className="content">
@@ -107,9 +143,7 @@ const Post = ({ post }) => {
         {post.is_for_sell == 1 && <AddToCard post={post} />}
         <div className="info">
           <div className="item">
-            {isFetching ? (
-              <i className="ri-loader-line"></i>
-            ) : likes?.includes(currentUser.id) ? (
+            {post?.likes?.includes(currentUser.id) ? (
               <i
                 className="ri-heart-fill"
                 style={{ color: "red" }}
@@ -118,7 +152,7 @@ const Post = ({ post }) => {
             ) : (
               <i className="ri-heart-line" onClick={handleLike}></i>
             )}
-            {likes?.length} Likes
+            {post?.likes?.length} Likes
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <i className="ri-message-2-line"></i>
@@ -132,6 +166,12 @@ const Post = ({ post }) => {
 
         {commentOpen && <Comments postId={post.id} />}
       </div>
+      {contextHolder}
+      <HandlePost
+        isOpen={isPostModalOpen}
+        setIsOpen={setIsPostModalOpen}
+        post={post}
+      />
     </div>
   );
 };

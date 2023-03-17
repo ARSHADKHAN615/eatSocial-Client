@@ -23,25 +23,29 @@ const AddToCard = ({ post }) => {
   return (
     <div className="buy-info">
       <div className="price">Price: ${post.price}</div>
-      <Form
-        layout="inline"
-        form={form}
-        onFinish={(values) => mutate({ ...values, postId: post.id })}
-        initialValues={initialValues}
-      >
-        <Form.Item
-          label="Quantity"
-          name="qty"
-          rules={[{ required: true, message: "Quantity is required!" }]}
+      {post.qty > 0 ? (
+        <Form
+          layout="inline"
+          form={form}
+          onFinish={(values) => mutate({ ...values, postId: post.id })}
+          initialValues={initialValues}
         >
-          <InputNumber min={1} max={post.qty} style={{ width: "100%" }} />
-        </Form.Item>
-        <Form.Item style={{ textAlign: "right" }}>
-          <Button type="primary" htmlType="submit" loading={isLoading}>
-            Add to Cart
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item
+            label="Quantity"
+            name="qty"
+            rules={[{ required: true, message: "Quantity is required!" }]}
+          >
+            <InputNumber min={1} max={post.qty} style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item style={{ textAlign: "right" }}>
+            <Button type="primary" htmlType="submit" loading={isLoading}>
+              Add to Cart
+            </Button>
+          </Form.Item>
+        </Form>
+      ) : (
+        <div className="qty">Out of Stock</div>
+      )}
     </div>
   );
 };

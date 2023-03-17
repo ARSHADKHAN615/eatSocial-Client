@@ -13,7 +13,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../context/authContext";
 import { useFirebase } from "../../context/FirebaseContext";
-import { createPost } from "../../api";
+import { createPost, updatePost } from "../../api";
 
 const HandlePost = ({ isOpen, setIsOpen, post }) => {
   const [form] = Form.useForm();
@@ -26,7 +26,7 @@ const HandlePost = ({ isOpen, setIsOpen, post }) => {
     setIsOpen(false);
   };
   // Handle Post Create/Update
-  const mutation = useMutation((newPost) => createPost(newPost), {
+  const mutation = useMutation((newPost) => post ? updatePost(newPost) : createPost(newPost), {
     onSuccess: (data) => {
       queryClient.invalidateQueries("posts");
       if (post) {
@@ -42,7 +42,7 @@ const HandlePost = ({ isOpen, setIsOpen, post }) => {
     },
   });
   const onFinish = (values) => {
-    mutation.mutate(values);
+    mutation.mutate(post ? { ...values, id: post.id } : values);
     console.log("Success:", values);
   };
 
@@ -73,12 +73,24 @@ const HandlePost = ({ isOpen, setIsOpen, post }) => {
     maxCount: 1,
   };
 
+
   const initialValues = {
-    isForSale: post?.isForSale || false,
+    isForSale: post?.is_for_sell == 1 ? true : false,
     title: post?.title,
-    des: post?.des,
+    desc: post?.desc,
     price: post?.price,
     qty: post?.qty,
+    discount: post?.discount,
+    img: post?.img
+      ? [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: post?.img,
+          },
+        ]
+      : [],
   };
 
   return (
@@ -127,6 +139,7 @@ const HandlePost = ({ isOpen, setIsOpen, post }) => {
           }}
           valuePropName="fileList"
           style={{ width: "100%", marginBottom: "1rem" }}
+          rules={[{ required: true, message: "Image is required!" }]}
         >
           <Upload
             {...propsUpload}

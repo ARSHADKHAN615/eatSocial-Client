@@ -17,11 +17,26 @@ import { useDarkMode } from "./context/darkModeContext";
 import { useAuth } from "./context/authContext";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
-
+import OrderSuccess from "./pages/Checkout/OrderSuccess";
+import YourOrders from "./pages/Sections/YourOrders";
+import SearchUser from "./pages/UserListing/SearchUser";
+import Following from "./pages/UserListing/Following";
+import emptyBox from "./lottieAnimation/empty-box.json";
+import Lottie from "lottie-react";
 function App() {
   const { darkMode } = useDarkMode();
   const { currentUser } = useAuth();
   const { defaultAlgorithm, darkAlgorithm } = theme;
+
+  const customizeRenderEmpty = () => (
+    <div
+      style={{
+        textAlign: "center",
+      }}
+    >
+      <Lottie animationData={emptyBox} loop={true} style={{ height: 250 }} />
+    </div>
+  );
 
   const Layout = () => {
     return (
@@ -52,6 +67,9 @@ function App() {
   const ProtectedRoute = ({ children }) => {
     return currentUser ? children : <Navigate to="/login" />;
   };
+  const NoProtectedRoute = ({ children }) => {
+    return !currentUser ? children : <Navigate to="/" />;
+  };
 
   const router = createBrowserRouter([
     {
@@ -64,15 +82,26 @@ function App() {
       children: [
         { path: "/", element: <Home /> },
         { path: "/profile/:userId", element: <Profile /> },
+        { path: "/your-orders", element: <YourOrders /> },
+        { path: "/search", element: <SearchUser /> },
+        { path: "/followings", element: <Following /> },
       ],
     },
     {
       path: "/login",
-      element: <SignIn />,
+      element: (
+        <NoProtectedRoute>
+          <SignIn />
+        </NoProtectedRoute>
+      ),
     },
     {
       path: "/register",
-      element: <SignUp />,
+      element: (
+        <NoProtectedRoute>
+          <SignUp />
+        </NoProtectedRoute>
+      ),
     },
     {
       path: "/",
@@ -84,6 +113,7 @@ function App() {
       children: [
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
+        { path: "/order-success", element: <OrderSuccess /> },
       ],
     },
   ]);
@@ -94,6 +124,7 @@ function App() {
         theme={{
           algorithm: darkMode ? darkAlgorithm : defaultAlgorithm,
         }}
+        renderEmpty={customizeRenderEmpty}
       >
         <RouterProvider router={router} />
       </ConfigProvider>

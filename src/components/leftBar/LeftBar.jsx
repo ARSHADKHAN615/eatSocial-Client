@@ -14,32 +14,57 @@ import Courses from "../../assets/12.png";
 import Fund from "../../assets/13.png";
 import "./left.scss";
 import { useAuth } from "../../context/authContext";
+import { Link } from "react-router-dom";
 const LeftBar = () => {
-  const {currentUser} = useAuth();
+  const { currentUser } = useAuth();
   return (
     <div className="leftBar">
       <div className="container">
         <div className="menu">
-          <div className="user">
-            <img src={currentUser.profilePic ? currentUser.profilePic : `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${currentUser?.name}`} alt="" />
-            <span>{currentUser?.name}</span>
-          </div>
-          <div className="item">
-            <img src={Friends} alt="" />
-            <span>Friends</span>
-          </div>
+          <Link
+            to={`/profile/${currentUser?.id}`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <div className="user">
+              <img
+                src={
+                  currentUser.profilePic
+                    ? currentUser.profilePic
+                    : `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${currentUser?.name}`
+                }
+                alt=""
+              />
+              <span>{currentUser?.name}</span>
+            </div>
+          </Link>
+          <Link
+            to="/followings"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <div className="item">
+              <img src={Friends} alt="" />
+              <span>Followings</span>
+            </div>
+          </Link>
           <div className="item">
             <img src={Groups} alt="" />
             <span>Groups</span>
           </div>
-          <div className="item">
-            <img src={Market} alt="" />
-            <span>Marketplace</span>
-          </div>
-          <div className="item">
-            <img src={Watch} alt="" />
-            <span>Watch</span>
-          </div>
+          <Link to="/search" style={{ textDecoration: "none", color: "black" }}>
+            <div className="item">
+              <img src={Market} alt="" />
+              <span>Search</span>
+            </div>
+          </Link>
+          <Link
+            to="/your-orders"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <div className="item">
+              <img src={Watch} alt="" />
+              <span>Your Orders</span>
+            </div>
+          </Link>
           <div className="item">
             <img src={Memories} alt="" />
             <span>Memories</span>

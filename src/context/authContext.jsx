@@ -22,14 +22,17 @@ export const AuthContextProvider = ({ children }) => {
       message.error(error.response.data.error || "Something went wrong");
     }
   };
-  
+  const logout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem("user");
+  };
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser?.name]);
 
   return (
-    <AuthContext.Provider value={{ currentUser, login , setCurrentUser}}>
+    <AuthContext.Provider value={{ currentUser, login , setCurrentUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

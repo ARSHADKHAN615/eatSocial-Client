@@ -3,17 +3,13 @@ import { getCart, removeFromCart } from "../../api";
 import { Button, Popconfirm, Space, Table, message } from "antd";
 import "./cart.scss";
 import { Link } from "react-router-dom";
+import { useCart } from "../../context/cartContext";
 const Cart = () => {
   const queryClient = useQueryClient();
 
   // Get Cart
-  const { data: cart, isFetching } = useQuery({
-    queryKey: ["cart"],
-    queryFn: getCart,
-    onError: (error) => {
-      message.error(error.response?.data.error || error.message);
-    },
-  });
+  const { cart , cartFetching : isFetching } = useCart();
+
   // Handle Delete Cart Item
   const removeFromCartMutation = useMutation(
     (cartId) => removeFromCart(cartId),
@@ -95,15 +91,17 @@ const Cart = () => {
       />
       <div className="cart-actions">
         <Link to="/">
-          <Button type="primary" size="large">            
+          <Button type="primary" size="large">
             Continue Shopping
           </Button>
         </Link>
-        <Link to="/checkout">
-          <Button type="primary" style={{ float: "right" }} size="large">
-            Checkout
-          </Button>
-        </Link>
+        {cart.length > 0 && (
+          <Link to="/checkout">
+            <Button type="primary" style={{ float: "right" }} size="large">
+              Checkout
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );
