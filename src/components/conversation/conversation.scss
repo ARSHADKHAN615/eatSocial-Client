@@ -1,0 +1,45 @@
+@import "../../style.scss";
+
+.conversation {
+  @include themify($themes) {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+
+    .conversation:hover {
+      background-color: themed("bg");
+    }
+    &.active {
+      background-color: themed("addToCart");
+      border-radius: 2rem;
+    }
+    .chatOnlineImgContainer {
+      position: relative;
+    }
+    .chatOnlineBadge {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: limegreen;
+      position: absolute;
+      top: 2px;
+    }
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+
+    .conversationName {
+      font-weight: 500;
+      color: themed("textColor");
+      @include mobile {
+        display: none;
+      }
+    }
+  }
+}

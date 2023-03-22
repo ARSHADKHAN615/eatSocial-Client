@@ -6,6 +6,7 @@ $themes: (
     bgSoft: #f6f3f3,
     textColorSoft: #555,
     border: lightgray,
+    addToCart: #8ef1ff,
   ),
   dark: (
     textColor: whitesmoke,
@@ -14,8 +15,10 @@ $themes: (
     bgSoft: #333,
     textColorSoft: lightgray,
     border: #444,
+    addToCart: #333,
   ),
 );
+
 
 @mixin themify($themes) {
   @each $theme, $map in $themes {

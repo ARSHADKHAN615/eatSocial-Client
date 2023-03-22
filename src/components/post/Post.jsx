@@ -10,16 +10,15 @@ import { Dropdown, Modal, message } from "antd";
 import AddToCard from "../AddToCard";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import HandlePost from "../formModel/HandlePost";
+import ProfileImg from "../ProfileImg";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
-  const [deleteMenu, setDeleteMenu] = useState(false);
   const [modal, contextHolder] = Modal.useModal();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const postId = post?.id;
-
 
   // Handle Delete Post
   const deletePostMutation = useMutation((postId) => deletePost(postId), {
@@ -75,7 +74,6 @@ const Post = ({ post }) => {
       label: (
         <>
           <i
-            onClick={confirm}
             className="ri-delete-bin-2-line"
             style={{ fontSize: "1.2rem" }}
           ></i>
@@ -84,7 +82,9 @@ const Post = ({ post }) => {
       key: "0",
     },
     {
-      label: <i className="ri-edit-box-line" onClick={() => setIsPostModalOpen(true)} style={{ fontSize: "1.2rem" }}></i>,
+      label: (
+        <i className="ri-edit-box-line" style={{ fontSize: "1.2rem" }}></i>
+      ),
       key: "1",
     },
   ];
@@ -93,14 +93,7 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img
-              src={
-                post.profilePic
-                  ? post.profilePic
-                  : `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${post?.name}`
-              }
-              alt=""
-            />
+            <ProfileImg user={post} />
             <div className="details">
               <Link
                 to={`/profile/${post.userId}`}
@@ -116,23 +109,20 @@ const Post = ({ post }) => {
               <Dropdown
                 menu={{
                   items,
+                  onClick: ({ key }) => {
+                    if (key === "0") {
+                      confirm();
+                    } else if (key === "1") {
+                      setIsPostModalOpen(true);
+                    }
+                  },
                 }}
                 trigger={["click"]}
                 arrow
               >
                 <i className="ri-more-fill" style={{ cursor: "pointer" }}></i>
               </Dropdown>
-              // <i
-              //   className="ri-more-fill"
-              //   style={{ cursor: "pointer" }}
-              //   onClick={() => setDeleteMenu((prev) => !prev)}
-              // ></i>
             )}
-            {/* {deleteMenu && (
-              <button className="delete" onClick={() => handleDelete(post.id)}>
-                Delete
-              </button>
-            )} */}
           </div>
         </div>
         <div className="content">
@@ -156,7 +146,7 @@ const Post = ({ post }) => {
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <i className="ri-message-2-line"></i>
-            12 Comments
+            Comments
           </div>
           <div className="item">
             <i className="ri-share-line"></i>

@@ -19,10 +19,11 @@ import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 import OrderSuccess from "./pages/Checkout/OrderSuccess";
 import YourOrders from "./pages/Sections/YourOrders";
-import SearchUser from "./pages/UserListing/SearchUser";
-import Following from "./pages/UserListing/Following";
+import SearchUser from "./pages/Sections/SearchUser";
+import Following from "./pages/Sections/Following";
 import emptyBox from "./lottieAnimation/empty-box.json";
 import Lottie from "lottie-react";
+import Message from "./pages/Messaging/Message";
 function App() {
   const { darkMode } = useDarkMode();
   const { currentUser } = useAuth();
@@ -40,7 +41,7 @@ function App() {
 
   const Layout = () => {
     return (
-      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+      <div className={`body-bg  theme-${darkMode ? "dark" : "light"}`}>
         <NavBar />
         <div style={{ display: "flex" }}>
           <LeftBar />
@@ -114,6 +115,7 @@ function App() {
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
         { path: "/order-success", element: <OrderSuccess /> },
+        { path: "/conversation", element: <Message /> },
       ],
     },
   ]);

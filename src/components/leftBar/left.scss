@@ -36,7 +36,10 @@
         span {
           font-size: 12px;
         }
-
+        a{
+          text-decoration: none;
+          color: inherit;
+        }
         .user {
           display: flex;
           align-items: center;
@@ -62,7 +65,9 @@
           img {
             width: 30px;
           }
-
+          i{
+            font-size: 1.5rem;
+          }
           span {
             font-size: 14px;
           }

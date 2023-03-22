@@ -19,7 +19,10 @@
     &::-webkit-scrollbar {
       display: none;
     }
-
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
     .container {
       padding: 10px;
 

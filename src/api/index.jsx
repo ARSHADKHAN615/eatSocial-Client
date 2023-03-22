@@ -15,7 +15,12 @@ export const getUsers = async (queryKey) => {
   const searchQuery = queryKey.queryKey[1];
   return (await api.get(`users?search=${searchQuery}`)).data;
 };
-
+export const getUsersWhichHaveMostFollowers = async () => {
+  return (await api.get(`users/most-followers`)).data;
+};
+export const logoutApi = async () => {
+  return await api.post("auth/logout");
+};
 
 
 // Posts Endpoints
@@ -96,6 +101,17 @@ export const placeOrder = async (order) => {
 };
 
 
-// Get Countries
-export const getCountries = async () => {
+// Messenger Endpoints
+export const getConversations = async () => {
+  return (await api.get(`conversations`)).data;
+};
+export const getMessages = async (queryKey) => {
+  const conversationId = queryKey.queryKey[1].conversationId;
+  return (await api.get(`messages/${conversationId}`)).data;
+};
+export const sendMessageApi = async (values) => {
+  return await api.post(`message`, values);
+};
+export const createConversationApi = async (values) => {
+  return await api.post(`conversation`, values);
 };

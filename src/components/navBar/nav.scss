@@ -79,12 +79,9 @@
       .user {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 5px;
         font-weight: 500;
-
-        @include tablet {
-          display: none;
-        }
+        font-size: 14px;
       }
     }
   }

@@ -4,6 +4,8 @@ import "./comments.scss";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createComment, getComments } from "../../api";
 import { format } from "timeago.js";
+import ProfileImg from "../ProfileImg";
+import NormalLoader from "../NormalLoader";
 
 const Comments = ({ postId }) => {
   const { currentUser } = useAuth();
@@ -44,22 +46,14 @@ const Comments = ({ postId }) => {
   };
 
   return status === "loading" ? (
-    <span>Loading...</span>
+    <NormalLoader />
   ) : status === "error" ? (
     <span>Error: {error.message}</span>
   ) : (
     <>
-      {isFetching ? <div>Refreshing...</div> : null}
       <div className="comments">
         <div className="write">
-          <img
-            src={
-              currentUser.profilePic
-                ? currentUser.profilePic
-                : `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${currentUser?.name}`
-            }
-            alt=""
-          />
+          <ProfileImg user={currentUser} />
           <Form
             name="basic"
             form={form}
@@ -87,14 +81,7 @@ const Comments = ({ postId }) => {
         {comments.length === 0 && <span>No comments yet</span>}
         {comments.map((comment, i) => (
           <div className="comment" key={i}>
-            <img
-              src={
-                comment.profilePic
-                  ? comment.profilePic
-                  : `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${comment?.name}`
-              }
-              alt=""
-            />
+            <ProfileImg user={comment} />
             <div className="info">
               <span>{comment.name}</span>
               <p>{comment.description}</p>

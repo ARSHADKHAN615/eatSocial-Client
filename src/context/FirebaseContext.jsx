@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { createContext, useContext } from "react";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import {
   getStorage,
   ref,
@@ -26,12 +27,20 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 // Initialize Firebase Storage
 const storage = getStorage(app);
+// Initialize Firebase Auth
+const auth = getAuth(app);
+// Initialize Google Auth Provider
+const provider = new GoogleAuthProvider();
+
+
 
 // useFirebase hook for accessing firebase context
 export const useFirebase = () => useContext(FirebaseContext);
 
 // FirebaseProvider for wrapping the app with firebase context provider
 export function FirebaseProvider({ children }) {
+
+
   const customUpload = (options,dis) => {
     const { onSuccess, onError, file, onProgress } = options;
     const fileName = new Date().getTime() + file.name;
@@ -66,8 +75,11 @@ export function FirebaseProvider({ children }) {
     );
   };
 
+  const signInGoogleProvider = async () => signInWithPopup(auth, provider);
+     
+
   return (
-    <FirebaseContext.Provider value={{ customUpload }}>
+    <FirebaseContext.Provider value={{ customUpload , signInGoogleProvider }}>
       {children}
     </FirebaseContext.Provider>
   );

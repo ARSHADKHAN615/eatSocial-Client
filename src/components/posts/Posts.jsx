@@ -22,14 +22,21 @@ const Posts = ({ userId }) => {
       if (error.response?.status === 401) {
         logout();
       }
-      message.error(error.response?.data.error || error.message);
+      console.log(error.response?.data.error || error.message);
     },
   });
 
   return isLoading ? (
     <LoadingCow />
   ) : status === "error" ? (
-    <span>Error: {error.response?.data.error || error.message}</span>
+    userId ? (
+      <span className="noPosts"> User has no Posts</span>
+    ) : (
+      <span className="noPosts">
+        No Posts Yet <br /> Create a Post to see it here <br /> Follow other
+        users to see their posts here
+      </span>
+    )
   ) : (
     <>
       <div className="posts">

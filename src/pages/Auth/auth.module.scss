@@ -13,14 +13,13 @@
     min-height: 600px;
     overflow: hidden;
     margin: 1rem;
-    box-shadow:0 8px 32px #1f26875e !important;
+    box-shadow:0 8px 32px #1c1f415e !important;
     flex-wrap: wrap;
     .left {
       flex: 1;
-      background: linear-gradient(rgba(39, 11, 96, 0.5), rgba(39, 11, 96, 0.5)),
-        url("https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600")
-          center no-repeat;
-      background-size: cover;
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(39, 11, 96, 0.5)),
+        url("/src/assets/customer-support.png") center no-repeat;
+      background-size:  100% 100%;
       padding: 50px;
       display: flex;
       flex-direction: column;
@@ -28,7 +27,7 @@
       color: white;
 
       h1 {
-        font-size: 8vw;
+        font-size: 5vw;
         line-height: 100px;
       }
 
@@ -44,6 +43,7 @@
         color: rebeccapurple;
         font-weight: bold;
         cursor: pointer;
+        border-radius: 5px;
       }
     }
 
@@ -56,32 +56,7 @@
       justify-content: center;
 
       h1 {
-        color: #555;
-      }
-
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-
-        input {
-          border: none;
-          border-bottom: 1px solid lightgray;
-          padding: 20px 10px;
-          outline: none;
-        }
-        input:focus {
-          border-bottom: 1px solid #938eef;
-        }
-        button {
-          width: 50%;
-          padding: 10px;
-          border: none;
-          background-color: #938eef;
-          color: white;
-          font-weight: bold;
-          cursor: pointer;
-        }
+        color: #000000;
       }
     }
   }
@@ -94,7 +69,7 @@
   justify-content: center;
 
   .card {
-    width: 70%;
+    width: 90%;
     display: flex;
     flex-direction: row-reverse;
     background-color: white;
@@ -106,7 +81,7 @@
     box-shadow:0 8px 32px #1f26875e !important;
 
     .left {
-      flex: 1;
+      width: 50%;
       background: linear-gradient(rgba(39, 11, 96, 0.5), rgba(39, 11, 96, 0.5)),
         url("https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600")
           center no-repeat;
@@ -118,7 +93,7 @@
       color: white;
 
       h1 {
-        font-size: 9.5vw;
+        font-size:7vw;
         line-height: 100px;
       }
 
@@ -148,36 +123,36 @@
       justify-content: center;
 
       h1 {
-        color: #555;
+        color: #000000;
       }
 
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
+      // form {
+      //   display: flex;
+      //   flex-direction: column;
+      //   gap: 30px;
 
-        input {
-          border: none;
-          border-bottom: 1px solid lightgray;
-          padding: 20px 10px;
-          outline: none;
-          transition: all 1s ease;
-          transform-origin: center;
-        }
-        input:focus {
-          border-bottom: 1px solid #938eef;
-        }
+      //   input {
+      //     border: none;
+      //     border-bottom: 1px solid lightgray;
+      //     padding: 20px 10px;
+      //     outline: none;
+      //     transition: all 1s ease;
+      //     transform-origin: center;
+      //   }
+      //   input:focus {
+      //     border-bottom: 1px solid #938eef;
+      //   }
 
-        button {
-          width: 50%;
-          padding: 10px;
-          border: none;
-          background-color: #938eef;
-          color: white;
-          font-weight: bold;
-          cursor: pointer;
-        }
-      }
+      //   button {
+      //     width: 50%;
+      //     padding: 10px;
+      //     border: none;
+      //     background-color: #938eef;
+      //     color: white;
+      //     font-weight: bold;
+      //     cursor: pointer;
+      //   }
+      // }
     }
   }
 }

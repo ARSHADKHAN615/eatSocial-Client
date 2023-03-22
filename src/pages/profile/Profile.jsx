@@ -1,10 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Posts from "../../components/posts/Posts";
 import "./profile.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
-import { Skeleton, message } from "antd";
-import { followUser, getProfile, unfollowUser } from "../../api";
+import { Button, Skeleton, Space, message } from "antd";
+import {
+  createComment,
+  createConversationApi,
+  followUser,
+  getProfile,
+  unfollowUser,
+} from "../../api";
+import { MessageOutlined } from "@ant-design/icons";
 import demoCover from "../../assets/demoCover.svg";
 import UpdateProfile from "../../components/formModel/UpdateProfile";
 import { useState } from "react";
@@ -19,9 +26,14 @@ const Profile = () => {
   const [followingListModal, setFollowingListModal] = useState(false);
   const queryClient = useQueryClient();
   const [followersId, setFollowersId] = useState([]);
-
+  const navigate = useNavigate();
   // Get UserProfile Information
-  const { data: profile, isFetching } = useQuery({
+  const {
+    data: profile,
+    isFetching,
+    isLoading,
+    status,
+  } = useQuery({
     queryKey: ["profile", userId],
     queryFn: getProfile,
     enabled: !!userId,
@@ -49,12 +61,32 @@ const Profile = () => {
       },
     }
   );
-
   const handleFollow = () => {
     mutation.mutate(followersId.includes(currentUser.id));
   };
 
-  return (
+  // Create Conversation
+  const { mutate: handleConversation } = useMutation(
+    (ids) => createConversationApi(ids),
+    {
+      onSuccess: (data) => {
+        message.success(data.data.message);
+        console.log(data.data);
+        navigate(`/conversation`);
+      },
+      onError: (error) => {
+        message.error(error.response.data.error || "Something went wrong");
+      },
+    }
+  );
+
+  const createConversation = () => {
+    handleConversation({ senderId: currentUser.id, receiverId: userId });
+  };
+
+  return status === "error" ? (
+    <h1>Something went wrong</h1>
+  ) : (
     <div className="profile">
       <div className="images">
         <img
@@ -76,12 +108,15 @@ const Profile = () => {
       </div>
       <div className="profileContainer">
         <div className="uInfo">
-          {isFetching ? (
+          {isLoading ? (
             <Skeleton active />
           ) : (
             <>
               <div className="center">
-                <span>{profile?.name}</span>
+                <div className="name">
+                  <span className="username">{profile?.username}</span>
+                  <span className="name">{profile?.name}</span>
+                </div>
                 <div className="info">
                   {profile?.city && (
                     <div className="item">
@@ -97,34 +132,55 @@ const Profile = () => {
                   )}
                 </div>
                 {userId == currentUser.id ? (
-                  <button
-                    className="edit"
+                  <Button
+                    type="primary"
                     onClick={() => setIsUpdateModalOpen(true)}
                   >
                     Edit Profile
-                  </button>
+                  </Button>
                 ) : !followersId.includes(currentUser.id) ? (
-                  <button className="follow" onClick={handleFollow}>
+                  <Button type="primary" onClick={handleFollow}>
                     Follow
-                  </button>
+                  </Button>
                 ) : (
-                  <button className="unfollow" onClick={handleFollow}>
-                    Unfollow
-                  </button>
+                  <Space direction="vertical">
+                    <Space wrap>
+                      <Button type="primary" onClick={handleFollow}>
+                        Unfollow
+                      </Button>
+                      <Button
+                        type="primary"
+                        onClick={createConversation}
+                        icon={<MessageOutlined />}
+                      >
+                        Message
+                      </Button>
+                    </Space>
+                  </Space>
                 )}
               </div>
               <div className="left">
-                <span onClick={() => setFollowersListModal(true)}>
-                  Followers: <b>{profile?.followers?.length}</b>
-                </span>
-                <span onClick={() => setFollowingListModal(true)}>
-                  Following: <b>{profile?.followings?.length}</b>
-                </span>
+                <Space direction="vertical">
+                  <Space wrap>
+                    <Button
+                      type="primary"
+                      onClick={() => setFollowersListModal(true)}
+                    >
+                      Followers: {profile?.followers?.length}
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => setFollowingListModal(true)}
+                    >
+                      Following: {profile?.followings?.length}
+                    </Button>
+                  </Space>
+                </Space>
               </div>
             </>
           )}
         </div>
-        {isFetching ? <LoadingCow /> : <Posts userId={userId} />}
+        {isLoading || isFetching ? <LoadingCow /> : <Posts userId={userId} />}
       </div>
       <UpdateProfile
         isOpen={isUpdateModalOpen}

@@ -89,7 +89,8 @@
         justify-content: space-between;
         margin: 20px 0px;
         width: 100%;
-        background-color: #f5f6fa;
+        background-color: themed("addToCart");
+        border-radius: 20px;
         padding: 10px;
         box-sizing: border-box;
         .price {

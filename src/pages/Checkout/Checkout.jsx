@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Collapse,
   Form,
@@ -17,13 +18,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { placeOrder } from "../../api";
 import { Country, State } from "country-state-city";
+import {
+  ProductListColumns,
+  discountPrice,
+} from "../../components/ProductListColumn";
+import React from "react";
 
 const Checkout = () => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
   const { cart, cartFetching: isFetching } = useCart();
+  const [qtyError, setQtyError] = React.useState(false);
   const navigate = useNavigate();
-
 
   // Place Order
   const { mutate: placeOrderBtn } = useMutation((data) => placeOrder(data), {
@@ -36,55 +42,6 @@ const Checkout = () => {
       message.error(error.response.data.error || "Something went wrong");
     },
   });
-
-  // Get Total Price
-  const discountPrice = (price, discount) => {
-    const discountPrice = discount ? price - (price * discount) / 100 : price;
-    return Number(discountPrice).toFixed(2);
-  };
-  // Set Columns
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "title",
-      render: (text) => <Link to={`/product/${text}`}>{text}</Link>,
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      render: (text, record) => (
-        <div>
-          <span
-            style={{
-              textDecoration: record.discount ? "line-through" : "none",
-            }}
-          >
-            ₹{text}
-          </span>
-          {record.discount ? (
-            <span style={{ color: "green", marginLeft: "10px" }}>
-              ₹{discountPrice(text, record.discount)} ( {record.discount}% off )
-            </span>
-          ) : null}
-        </div>
-      ),
-    },
-    {
-      title: "Quantity",
-      dataIndex: "qty",
-    },
-    {
-      title: "Total",
-      dataIndex: "total",
-      render: (text, record) => (
-        <span>
-          {(discountPrice(record.price, record.discount) * record.qty).toFixed(
-            2
-          )}
-        </span>
-      ),
-    },
-  ];
 
   const initialValues = {
     country: "IN",
@@ -246,7 +203,7 @@ const Checkout = () => {
           </Panel>
           <Panel header="Order Summary" key="3">
             <Table
-              columns={columns}
+              columns={ProductListColumns}
               dataSource={cart}
               pagination={false}
               bordered
@@ -256,13 +213,16 @@ const Checkout = () => {
                 pageData.forEach(({ price, qty, discount }) => {
                   grandTotal += discountPrice(price, discount) * qty;
                 });
-
+                pageData.forEach(({ qty, totalQ }) => {
+                  if (qty > totalQ) {
+                    setQtyError(true);
+                    return;
+                  }
+                });
                 return (
                   <>
-                    <Table.Summary.Row
-                      style={{ fontWeight: "bold", textAlign: "right" }}
-                    >
-                      <Table.Summary.Cell index={1} colSpan={3}>
+                    <Table.Summary.Row style={{ fontWeight: "bold" }}>
+                      <Table.Summary.Cell index={1} colSpan={4}>
                         <Form.Item
                           name="total"
                           hidden
@@ -282,12 +242,27 @@ const Checkout = () => {
               rowKey="cart_id"
               style={{ width: "100%" }}
             />
-
-            <Form.Item style={{ marginTop: "20px", textAlign: "right" }}>
-              <Button type="primary" htmlType="submit" size="large">
-                Place Order
-              </Button>
-            </Form.Item>
+            {qtyError ? (
+              <Alert
+                message="Some products are out of stock OR you have exceeded the quantity limit"
+                type="error"
+                showIcon
+                style={{ marginTop: "20px" }}
+              />
+            ) : cart.length === 0 ? (
+              <Alert
+                message="Your cart is empty"
+                type="error"
+                showIcon
+                style={{ marginTop: "20px" }}
+              />
+            ) : (
+              <Form.Item style={{ marginTop: "20px", textAlign: "right" }}>
+                <Button type="primary" htmlType="submit" size="large">
+                  Place Order
+                </Button>
+              </Form.Item>
+            )}
           </Panel>
         </Collapse>
       </Form>

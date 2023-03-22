@@ -4,11 +4,17 @@ import { Button, Popconfirm, Space, Table, message } from "antd";
 import "./cart.scss";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/cartContext";
+import {
+  ProductListColumns,
+  discountPrice,
+} from "../../components/ProductListColumn";
+import React from "react";
 const Cart = () => {
   const queryClient = useQueryClient();
+  const [qtyError, setQtyError] = React.useState(false);
 
   // Get Cart
-  const { cart , cartFetching : isFetching } = useCart();
+  const { cart, cartFetching: isFetching } = useCart();
 
   // Handle Delete Cart Item
   const removeFromCartMutation = useMutation(
@@ -25,25 +31,7 @@ const Cart = () => {
   );
 
   const columns = [
-    {
-      title: "Title",
-      dataIndex: "title",
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-    },
-    {
-      title: "Quantity",
-      dataIndex: "qty",
-    },
-    {
-      title: "Total",
-      dataIndex: "total",
-      render: (text, record) => <span>{record.price * record.qty}</span>,
-    },
-
+    ...ProductListColumns,
     {
       title: "Action",
       render: (_, record) => (
@@ -59,7 +47,7 @@ const Cart = () => {
           </Popconfirm>
         </Space>
       ),
-    },
+    },  
   ];
   return (
     <div className="cart">
@@ -72,13 +60,19 @@ const Cart = () => {
         title={() => <h1>Cart</h1>}
         summary={(pageData) => {
           let grandTotal = 0;
-          pageData.forEach(({ price, qty }) => {
-            grandTotal += price * qty;
+          pageData.forEach(({ price, qty, discount, totalQ }) => {
+            grandTotal += discountPrice(price, discount) * qty;
+          });
+          pageData.forEach(({ qty, totalQ }) => {
+            if (qty > totalQ) {
+              setQtyError(true);
+              return;
+            }
           });
           return (
             <>
               <Table.Summary.Row>
-                <Table.Summary.Cell index={1} colSpan={3}>
+                <Table.Summary.Cell index={1} colSpan={4}>
                   Grand Total
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={3}>{grandTotal}</Table.Summary.Cell>
@@ -95,13 +89,13 @@ const Cart = () => {
             Continue Shopping
           </Button>
         </Link>
-        {cart.length > 0 && (
+        {cart.length > 0 && !qtyError ? (
           <Link to="/checkout">
             <Button type="primary" style={{ float: "right" }} size="large">
               Checkout
             </Button>
           </Link>
-        )}
+        ) : null}
       </div>
     </div>
   );
