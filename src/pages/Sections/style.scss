@@ -28,11 +28,46 @@
     padding: 20px;
     background-color: themed("bg");
     color: themed("textColor");
-    min-height: calc(100vh - 100px);   
+    min-height: calc(100vh - 100px);
 
-    .view-order{
+    .view-order {
       font-size: 1.2rem;
       cursor: pointer;
     }
+  }
+}
+.explore {
+  @include themify($themes) {
+    padding: 20px;
+    background-color: themed("bg");
+    color: themed("textColor");
+    min-height: calc(100vh - 100px);
+
+    .search-list {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      // justify-content: space-around;
+      .cards {
+        text-decoration: none;
+        color: inherit;
+        display: inline-block;
+        width: 45%;
+        margin: 0.8rem;
+      }
+      .post-card-info {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+}
+.postDetail {
+  @include themify($themes) {
+    padding: 20px;
+    background-color: themed("bg");
+    color: themed("textColor");
+    min-height: calc(100vh - 100px);
   }
 }

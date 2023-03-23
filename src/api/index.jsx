@@ -27,6 +27,10 @@ export const logoutApi = async () => {
 export const getPosts = async (userId) => {
   return (await api.get("posts?userId=" + userId)).data;
 };
+export const getPost = async (postId) => {
+  postId = postId.queryKey[1];
+  return (await api.get(`post/${postId}`)).data;
+};
 export const createPost = async (newPost) => {
   return await api.post("/posts", newPost);
 };
@@ -36,6 +40,10 @@ export const deletePost = async (postId) => {
 export const updatePost = async (updatedPost) => {
   return await api.put(`posts/${updatedPost.id}`, updatedPost);
 };
+export const getFilterPosts = async (url) => {
+  return (await api.get(url)).data;
+};
+
 
 // Comments Endpoints
 export const getComments = async (queryKey) => {

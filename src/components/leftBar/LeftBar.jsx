@@ -32,7 +32,7 @@ const LeftBar = () => {
               <span>Search</span>
             </div>
           </Link>
-          <Link to="/followings">
+          <Link to="/explore">
             <div className="item">
               <i className="ri-compass-3-line"></i>
               <span>Explore</span>

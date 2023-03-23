@@ -11,7 +11,16 @@ import AddToCard from "../AddToCard";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import HandlePost from "../formModel/HandlePost";
 import ProfileImg from "../ProfileImg";
-
+import {
+  EmailShareButton,
+  EmailIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  LinkedinShareButton,
+  LinkedinIcon,
+} from "react-share";
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [modal, contextHolder] = Modal.useModal();
@@ -92,18 +101,15 @@ const Post = ({ post }) => {
     <div className="post">
       <div className="container">
         <div className="user">
-          <div className="userInfo">
-            <ProfileImg user={post} />
-            <div className="details">
-              <Link
-                to={`/profile/${post.userId}`}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
+          <Link to={`/profile/${post.userId}`}>
+            <div className="userInfo">
+              <ProfileImg user={post} />
+              <div className="details">
                 <span className="name">{post.name}</span>
-              </Link>
-              <span className="date">{format(post.createdAt)} </span>
+                <span className="date">{format(post.createdAt)} </span>
+              </div>
             </div>
-          </div>
+          </Link>
           <div className="options">
             {currentUser.id === post.userId && (
               <Dropdown
@@ -125,11 +131,13 @@ const Post = ({ post }) => {
             )}
           </div>
         </div>
-        <div className="content">
-          <p>{post?.title}</p>
-          <img src={post.img} alt="" />
-          <p>{post.desc}</p>
-        </div>
+        <Link to={`/post/${post.id}`}>
+          <div className="content">
+            <p>{post?.title}</p>
+            <img src={post.img} alt="" />
+            <p>{post.desc}</p>
+          </div>
+        </Link>
         {post.is_for_sell == 1 && <AddToCard post={post} />}
         <div className="info">
           <div className="item">
@@ -149,8 +157,26 @@ const Post = ({ post }) => {
             Comments
           </div>
           <div className="item">
-            <i className="ri-share-line"></i>
-            Share
+            {/* <i className="ri-share-line"></i> */}
+
+            <WhatsappShareButton
+              url={window.location.origin + "/post/" + post.id}
+              title={post.title}
+              separator=":: "
+            >
+              <WhatsappIcon size={32} round />
+            </WhatsappShareButton>
+            <TwitterShareButton
+              url={window.location.origin + "/post/" + post.id}
+              title={post.title}
+            >
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
+            <LinkedinShareButton
+              url={window.location.origin + "/post/" + post.id}
+            >
+              <LinkedinIcon size={32} round />
+            </LinkedinShareButton>
           </div>
         </div>
 

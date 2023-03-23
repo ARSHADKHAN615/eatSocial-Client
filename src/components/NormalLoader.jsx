@@ -11,7 +11,11 @@ const NormalLoader = () => {
       spin
     />
   );
-  return <Spin indicator={antIcon} />;
+  return (
+    <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+      <Spin indicator={antIcon} />
+    </div>
+  );
 };
 
 export default NormalLoader;
