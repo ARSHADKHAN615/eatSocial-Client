@@ -13,7 +13,6 @@ const LeftBar = () => {
     } catch (error) {
       console.log(error);
     }
-  
   };
 
   return (
@@ -42,6 +41,12 @@ const LeftBar = () => {
             <div className="item">
               <i className="ri-shopping-basket-line"></i>
               <span>Your Orders</span>
+            </div>
+          </Link>
+          <Link to="/get-orders">
+            <div className="item">
+            <i class="ri-store-2-line"></i>
+              <span> Get Orders</span>
             </div>
           </Link>
           <Link to="/conversation">

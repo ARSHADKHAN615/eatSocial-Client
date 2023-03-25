@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const discountPrice = (price, discount) => {
   const discountPrice = discount ? price - (price * discount) / 100 : price;
   return Number(discountPrice).toFixed(2);
@@ -7,6 +9,13 @@ export const ProductListColumns = [
   {
     title: "Name",
     dataIndex: "title",
+    render: (text, record) => (
+      <Link to={`/post/${record.postId}`}>
+        <span>{text}</span>
+        <br />
+        <span style={{ color: "gray" }}>{record.desc.slice(0, 50)}...</span>
+      </Link>
+    ),
   },
   {
     title: "Price",

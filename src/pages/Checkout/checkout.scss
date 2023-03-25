@@ -11,3 +11,18 @@
     }
   }
 }
+.order-success {
+  @include themify($themes) {
+    background-color: themed("bgSoft");
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    text-align: center;
+    h1 {
+      color: themed("textColor");
+    }
+    p {
+      color: themed("textColor");
+    }
+  }
+}

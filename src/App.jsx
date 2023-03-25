@@ -25,6 +25,7 @@ import Lottie from "lottie-react";
 import Message from "./pages/Messaging/Message";
 import Explore from "./pages/Sections/Explore";
 import PostDetail from "./pages/Sections/PostDetail";
+import GetOrders from "./pages/Sections/GetOrders";
 function App() {
   const { darkMode } = useDarkMode();
   const { currentUser } = useAuth();
@@ -88,6 +89,7 @@ function App() {
         { path: "/search", element: <SearchUser /> },
         { path: "/explore", element: <Explore /> },
         { path: "/post/:postId", element: <PostDetail /> },
+        { path: "/get-orders", element: <GetOrders />}
       ],
     },
     {
@@ -116,7 +118,7 @@ function App() {
       children: [
         { path: "/cart", element: <Cart /> },
         { path: "/checkout", element: <Checkout /> },
-        { path: "/order-success", element: <OrderSuccess /> },
+        { path: "/order-success/:orderId", element: <OrderSuccess /> },
         { path: "/conversation", element: <Message /> },
       ],
     },

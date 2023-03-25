@@ -126,7 +126,7 @@ const HandlePost = ({ isOpen, setIsOpen, post }) => {
           name="desc"
           rules={[{ required: true, message: "Description is required!" }]}
         >
-          <TextArea showCount maxLength={250} />
+          <TextArea showCount maxLength={1000}  rows={4} />
         </Form.Item>
         <Form.Item
           name="img"
@@ -168,8 +168,9 @@ const HandlePost = ({ isOpen, setIsOpen, post }) => {
                     formatter={(value) =>
                       `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     }
-                    parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                    // parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                     style={{ width: "100%" }}
+                    min={1}
                   />
                 </Form.Item>
                 <Form.Item

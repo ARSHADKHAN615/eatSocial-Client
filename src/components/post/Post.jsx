@@ -28,6 +28,7 @@ const Post = ({ post }) => {
   const { currentUser } = useAuth();
   const queryClient = useQueryClient();
   const postId = post?.id;
+  const [descriptionShow, setDescriptionShow] = useState(false);
 
   // Handle Delete Post
   const deletePostMutation = useMutation((postId) => deletePost(postId), {
@@ -52,7 +53,7 @@ const Post = ({ post }) => {
     {
       onSuccess: (data) => {
         queryClient.invalidateQueries("likes");
-        message.success("Like updated successfully");
+        message.success("Like updated");
       },
       onError: (error) => {
         message.error(error.response.data.error || "Something went wrong");
@@ -131,13 +132,30 @@ const Post = ({ post }) => {
             )}
           </div>
         </div>
-        <Link to={`/post/${post.id}`}>
-          <div className="content">
+        <div className="content">
+          <Link to={`/post/${post.id}`}>
             <p>{post?.title}</p>
             <img src={post.img} alt="" />
-            <p>{post.desc}</p>
-          </div>
-        </Link>
+          </Link>
+          <p
+            style={{ cursor: "pointer" }}
+            onClick={() => setDescriptionShow(!descriptionShow)}
+          >
+            {post?.desc.length > 100
+              ? post?.desc.slice(0, descriptionShow ? post?.desc.length : 100) +
+                "..."
+              : post?.desc}
+            {post?.desc.length > 100 && (
+              <span className="showMore">
+                {descriptionShow ? (
+                  <span>Show Less</span>
+                ) : (
+                  <span>Show More</span>
+                )}
+              </span>
+            )}
+          </p>
+        </div>
         {post.is_for_sell == 1 && <AddToCard post={post} />}
         <div className="info">
           <div className="item">
@@ -157,8 +175,6 @@ const Post = ({ post }) => {
             Comments
           </div>
           <div className="item">
-            {/* <i className="ri-share-line"></i> */}
-
             <WhatsappShareButton
               url={window.location.origin + "/post/" + post.id}
               title={post.title}

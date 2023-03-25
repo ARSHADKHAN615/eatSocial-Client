@@ -107,6 +107,12 @@ export const getOrders = async () => {
 export const placeOrder = async (order) => {
   return await api.post(`orders`, order);
 };
+export const userGetOrders = async () => {
+  return (await api.get(`getsOrders`)).data;
+};
+export const productStatus = async (data) => {
+  return (await api.put("order-product-status", data)).data;
+};
 
 
 // Messenger Endpoints

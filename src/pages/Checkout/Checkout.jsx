@@ -33,9 +33,9 @@ const Checkout = () => {
 
   // Place Order
   const { mutate: placeOrderBtn } = useMutation((data) => placeOrder(data), {
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries("cart");
-      navigate("/order-success");
+      navigate(`/order-success/${data.data.order_id}`);
       message.success("Order placed successfully");
     },
     onError: (error) => {
@@ -56,7 +56,7 @@ const Checkout = () => {
         initialValues={initialValues}
         onFinish={(values) => placeOrderBtn({ ...values, cart })}
       >
-        <Collapse defaultActiveKey={["1"]} forceRender>
+        <Collapse defaultActiveKey={["1","2"]} forceRender>
           <Panel header="Shipping Address" key="1">
             <div style={{ display: "flex", justifyContent: "space-around" }}>
               <Space
@@ -89,6 +89,7 @@ const Checkout = () => {
                   label="Email"
                   name="email"
                   rules={[
+                    { type: "email", message: "The input is not valid E-mail!" },
                     { required: true, message: "Please input your email!" },
                   ]}
                 >

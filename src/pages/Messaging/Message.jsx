@@ -33,7 +33,7 @@ const Message = () => {
         createdAt: Date.now(),
         sender: data.sender,
       });
-      console.log(data);
+      // console.log(data);
     });
     return () => {
       socket.current.disconnect();
@@ -48,7 +48,7 @@ const Message = () => {
       profilePic: currentUser.profilePic,
     });
     socket.current.on("getUsers", (users) => {
-      console.log(users);
+      // console.log(users);
       setOnlineUsers(users);
     });
     return () => {

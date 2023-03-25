@@ -183,7 +183,7 @@ const Explore = () => {
               }}
               cover={<img alt="example" src={item.img} />}
             >
-              <Meta title={item.title} description={item.desc} />
+              <Meta title={item.title} description={item.desc.slice(0, 50) + "..."} />
               <LikesCount data={item} />
             </Card>
           </Link>
