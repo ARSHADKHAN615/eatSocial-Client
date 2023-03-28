@@ -24,7 +24,7 @@ const Message = () => {
 
   // Initialize the socket connection and listen for new messages
   useEffect(() => {
-    socket.current = io("ws://localhost:3000");
+    socket.current = io(import.meta.env.VITE_SOCKET_URL);
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         con_id: data.conversationId,
@@ -76,6 +76,7 @@ const Message = () => {
     isLoading: conversationsLoading,
     error: conversationsError,
     isFetching: conversationsFetching,
+    refetch: refetchConversations,
   } = useQuery({
     queryKey: ["conversations"],
     queryFn: getConversations,
@@ -141,6 +142,9 @@ const Message = () => {
     form.resetFields();
   };
 
+  const info = () => {
+    message.info("You Not have any conversation, please create one");
+  };
 
   return (
     <div className="messengerContainer">
@@ -151,11 +155,18 @@ const Message = () => {
             size="large"
             style={{ marginBottom: "10px", marginTop: "10px" }}
           /> */}
-          <span style={{ marginBottom: "10px", marginTop: "10px" }}></span>
+          <span className="con-title" onClick={() => refetchConversations()}>
+            <span className="refresh-btn">
+              Refresh <i className="ri-refresh-line"></i>
+            </span>
+          </span>
           {conversationsLoading || conversationsFetching ? (
             <NormalLoader />
           ) : conversationsError ? (
-            <Navigate to="/" />
+            <>
+              <Navigate to="/" />
+              {info()}
+            </>
           ) : (
             <div>
               {conversations.map((c, i) => (

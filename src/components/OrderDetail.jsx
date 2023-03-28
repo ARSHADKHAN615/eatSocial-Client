@@ -1,6 +1,7 @@
 import { Descriptions, Table } from "antd";
 import { Link } from "react-router-dom";
 import { discountPrice } from "./ProductListColumn";
+import FormatPrice from "./FormatPrice";
 
 const OrderDetail = ({ orders, isFetching, action }) => {
   // Set Columns
@@ -21,13 +22,23 @@ const OrderDetail = ({ orders, isFetching, action }) => {
     {
       title: "Payment Method",
       dataIndex: "payment_method",
-      render: (text) => (
-        <span>{text === "2" ? "Cash On Delivery" : "Online"}</span>
+      render: (text, record) => (
+        <span>
+          {text === "2" ? "Cash On Delivery" : "Online"}
+          <br />
+          {record.razorpay_payment_id ? (
+            <span>
+              <b>Payment Id: </b>
+              {record.razorpay_payment_id}
+            </span>
+          ) : null}
+        </span>
       ),
     },
     {
       title: "Order Total",
       dataIndex: "order_total",
+      render: (text) => <FormatPrice price={text} />,
     },
     Table.EXPAND_COLUMN,
   ];
@@ -69,9 +80,12 @@ const OrderDetail = ({ orders, isFetching, action }) => {
       dataIndex: "total",
       render: (text, record) => (
         <span>
-          {(
+          {/* {(
             discountPrice(record.price, record.discount) * record.totalQ
-          ).toFixed(2)}
+          ).toFixed(2)} */}
+          <FormatPrice
+            price={discountPrice(record.price, record.discount) * record.totalQ}
+          />
         </span>
       ),
     },
@@ -121,7 +135,7 @@ const OrderDetail = ({ orders, isFetching, action }) => {
               dataSource={Order.products}
               pagination={false}
               bordered
-              rowKey="cart_id"
+              rowKey="order_product_id"
               style={{ width: "100%" }}
             />
           </>

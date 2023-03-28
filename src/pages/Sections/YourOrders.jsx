@@ -13,6 +13,7 @@ const YourOrders = () => {
 
   return (
     <div className="your-orders">
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Your Orders</h1>
       <OrderDetail orders={orders} isFetching={isFetching} />
     </div>
   );

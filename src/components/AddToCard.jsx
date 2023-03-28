@@ -3,6 +3,8 @@ import { Button, Form, InputNumber, message } from "antd";
 import React from "react";
 import { addToCart } from "../api";
 import { useAuth } from "../context/authContext";
+import FormatPrice from "./FormatPrice";
+import { discountPrice } from "./ProductListColumn";
 
 const AddToCard = ({ post }) => {
   const [form] = Form.useForm();
@@ -24,7 +26,24 @@ const AddToCard = ({ post }) => {
   };
   return (
     <div className="buy-info">
-      <div className="price">Price: ₹{post.price}</div>
+      <div className="price">
+        <div>
+          <span
+            style={{
+              textDecoration: post.discount ? "line-through" : "none",
+            }}
+          >
+            <FormatPrice price={post.price} />
+          </span>
+          <br />
+          {post.discount ? (
+            <span style={{ color: "green"}}>
+              <FormatPrice price={discountPrice(post.price, post.discount)} /> ({" "}
+              {post.discount}% off )
+            </span>
+          ) : null}
+        </div>
+      </div>
       {post.qty > 0 ? (
         <Form
           layout="inline"

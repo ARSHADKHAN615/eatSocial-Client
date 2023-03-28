@@ -61,6 +61,9 @@ const GetOrders = () => {
   };
   return (
     <div className="your-orders">
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
+        Get Orders
+      </h1>
       <OrderDetail
         orders={orders}
         isFetching={isFetching}

@@ -17,7 +17,7 @@ export const CartProvider = ({ children }) => {
       setCart(data);
     },
     onError: (error) => {
-      message.error(error.response?.data.error || error.message);
+      console.log(error);
     },
   });
 

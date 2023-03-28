@@ -6,7 +6,7 @@
     background-color: themed("bg");
     justify-content: space-around;
     position: absolute;
-    top:65px;
+    top: 65px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -15,12 +15,29 @@
       width: 30%;
       padding: 4px;
       box-sizing: border-box;
+
+      .con-title {
+        display: inline-block;
+        margin: 10px 0;
+        font-weight: 600;
+        color: themed("textColor");
+
+        .refresh-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;        
+          cursor: pointer;
+          i {
+            margin-left: 5px;
+          }
+        }
+      }
     }
     .chatBox {
       width: 65%;
       display: flex;
       flex-direction: column;
-      
+
       .chatBoxBottom {
         margin: 10px 0;
       }

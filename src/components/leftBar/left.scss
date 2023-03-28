@@ -11,9 +11,12 @@
     color: themed("textColor");
 
     @include mobile{
-      display: none;
+      transform: translateX(-100%);
     }
 
+    &.active {
+      transform: translateX(0%);
+    }
     &::-webkit-scrollbar {
       display: none;
     }

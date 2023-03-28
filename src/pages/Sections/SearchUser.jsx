@@ -1,10 +1,4 @@
-import {
-  Avatar,
-  Input,
-  List,
-  Spin,
-  message,
-} from "antd";
+import { Avatar, Input, List, Spin, message } from "antd";
 const { Search } = Input;
 import React from "react";
 import { getUsers } from "../../api";
@@ -26,8 +20,9 @@ const SearchUser = () => {
 
   return (
     <div className="search-user">
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Search User</h1>
       <Search
-        placeholder="Search User"
+        placeholder="Type to search user"
         onChange={(e) => setSearchQuery(e.target.value)}
         loading={isFetching}
       />

@@ -2,8 +2,10 @@ import "./left.scss";
 import { useAuth } from "../../context/authContext";
 import { Link } from "react-router-dom";
 import { logoutApi } from "../../api";
+import { useState } from "react";
 const LeftBar = () => {
   const { currentUser, logout } = useAuth();
+  const [menuActive, setMenuActive] = useState(false);
   const logoutHandler = async () => {
     try {
       await logoutApi();
@@ -16,7 +18,7 @@ const LeftBar = () => {
   };
 
   return (
-    <div className="leftBar">
+    <div className={`leftBar ${menuActive && "active"}`}>
       <div className="container">
         <div className="menu">
           <Link to={`/profile/${currentUser?.id}`}>
@@ -45,7 +47,7 @@ const LeftBar = () => {
           </Link>
           <Link to="/get-orders">
             <div className="item">
-            <i class="ri-store-2-line"></i>
+            <i className="ri-store-2-line"></i>
               <span> Get Orders</span>
             </div>
           </Link>

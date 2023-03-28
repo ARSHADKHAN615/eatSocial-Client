@@ -43,7 +43,7 @@ const HandlePost = ({ isOpen, setIsOpen, post }) => {
   });
   const onFinish = (values) => {
     mutation.mutate(post ? { ...values, id: post.id } : values);
-    console.log("Success:", values);
+    // console.log("Success:", values);
   };
 
   const propsUpload = {

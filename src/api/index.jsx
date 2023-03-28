@@ -104,7 +104,7 @@ export const removeFromCart = async (itemId) => {
 export const getOrders = async () => {
   return (await api.get(`orders`)).data;
 };
-export const placeOrder = async (order) => {
+export const placeOrderApi = async (order) => {
   return await api.post(`orders`, order);
 };
 export const userGetOrders = async () => {

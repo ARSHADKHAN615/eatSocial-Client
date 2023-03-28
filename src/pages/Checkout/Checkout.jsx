@@ -16,13 +16,14 @@ import "./checkout.scss";
 import { useCart } from "../../context/cartContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
-import { placeOrder } from "../../api";
+import { api, placeOrderApi } from "../../api";
 import { Country, State } from "country-state-city";
 import {
   ProductListColumns,
   discountPrice,
 } from "../../components/ProductListColumn";
 import React from "react";
+import FormatPrice from "../../components/FormatPrice";
 
 const Checkout = () => {
   const queryClient = useQueryClient();
@@ -31,17 +32,62 @@ const Checkout = () => {
   const [qtyError, setQtyError] = React.useState(false);
   const navigate = useNavigate();
 
-  // Place Order
-  const { mutate: placeOrderBtn } = useMutation((data) => placeOrder(data), {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries("cart");
-      navigate(`/order-success/${data.data.order_id}`);
-      message.success("Order placed successfully");
-    },
-    onError: (error) => {
-      message.error(error.response.data.error || "Something went wrong");
-    },
-  });
+  // Place Order Mutation
+  const { mutate: placeOrder, isLoading: placeOrderLoading } = useMutation(
+    (data) => placeOrderApi(data),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("cart");
+        navigate(`/order-success/${data.data.order_id}`);
+        message.success("Order placed successfully");
+      },
+      onError: (error) => {
+        message.error(error.response.data.error || "Something went wrong");
+      },
+    }
+  );
+
+  // Initiate Payment with Razorpay
+  const initPayment = (data, order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: data.amount,
+      currency: data.currency,
+      name: "eatSocial",
+      description: "eatSocial Order",
+      image: "https://i.imgur.com/3g7nmJC.png",
+      order_id: data.id,
+      handler: async (response) => {
+        try {
+          const { data } = await api.post("paymentVerification", response);
+          placeOrder({
+            ...order,
+            razorpay_payment_id: data.razorpay_payment_id,
+            razorpay_order_id: data.razorpay_order_id,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+    const rzp1 = new window.Razorpay(options);
+    rzp1.open();
+  };
+
+  // Order Place Button
+  const placeOrderBtn = async (data) => {
+    if (data.payment_method === "2") {
+      // If Payment method is COD
+      placeOrder(data);
+    } else {
+      // If Payment method is Online Payment
+      const razorpayOrder = (await api.post("razorpayOrder", data)).data;
+      initPayment(razorpayOrder, data);
+    }
+  };
 
   const initialValues = {
     country: "IN",
@@ -56,7 +102,7 @@ const Checkout = () => {
         initialValues={initialValues}
         onFinish={(values) => placeOrderBtn({ ...values, cart })}
       >
-        <Collapse defaultActiveKey={["1","2"]} forceRender>
+        <Collapse defaultActiveKey={["1", "2"]} forceRender>
           <Panel header="Shipping Address" key="1">
             <div style={{ display: "flex", justifyContent: "space-around" }}>
               <Space
@@ -89,7 +135,10 @@ const Checkout = () => {
                   label="Email"
                   name="email"
                   rules={[
-                    { type: "email", message: "The input is not valid E-mail!" },
+                    {
+                      type: "email",
+                      message: "The input is not valid E-mail!",
+                    },
                     { required: true, message: "Please input your email!" },
                   ]}
                 >
@@ -196,7 +245,7 @@ const Checkout = () => {
             >
               <Radio.Group>
                 <Space direction="vertical">
-                  <Radio value="1">Online Payment</Radio>
+                  <Radio value="1">Online Payment (Razorpay)</Radio>
                   <Radio value="2">Cash on Delivery</Radio>
                 </Space>
               </Radio.Group>
@@ -234,7 +283,7 @@ const Checkout = () => {
                         Grand Total
                       </Table.Summary.Cell>
                       <Table.Summary.Cell index={3}>
-                        {grandTotal}
+                        <FormatPrice price={grandTotal} />
                       </Table.Summary.Cell>
                     </Table.Summary.Row>
                   </>
@@ -259,7 +308,12 @@ const Checkout = () => {
               />
             ) : (
               <Form.Item style={{ marginTop: "20px", textAlign: "right" }}>
-                <Button type="primary" htmlType="submit" size="large">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  size="large"
+                  loading={placeOrderLoading}
+                >
                   Place Order
                 </Button>
               </Form.Item>

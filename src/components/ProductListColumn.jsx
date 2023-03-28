@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import FormatPrice from "./FormatPrice";
 
 export const discountPrice = (price, discount) => {
   const discountPrice = discount ? price - (price * discount) / 100 : price;
@@ -27,11 +28,12 @@ export const ProductListColumns = [
             textDecoration: record.discount ? "line-through" : "none",
           }}
         >
-          ₹{text}
+          <FormatPrice price={text} />
         </span>
         {record.discount ? (
           <span style={{ color: "green", marginLeft: "10px" }}>
-            ₹{discountPrice(text, record.discount)} ( {record.discount}% off )
+            <FormatPrice price={discountPrice(text, record.discount)} /> ({" "}
+            {record.discount}% off )
           </span>
         ) : null}
       </div>
@@ -64,7 +66,9 @@ export const ProductListColumns = [
     dataIndex: "total",
     render: (text, record) => (
       <span>
-        {(discountPrice(record.price, record.discount) * record.qty).toFixed(2)}
+        <FormatPrice
+          price={discountPrice(record.price, record.discount) * record.qty}
+        />
       </span>
     ),
   },

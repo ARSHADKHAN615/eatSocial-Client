@@ -9,6 +9,7 @@ import {
   discountPrice,
 } from "../../components/ProductListColumn";
 import React from "react";
+import FormatPrice from "../../components/FormatPrice";
 const Cart = () => {
   const queryClient = useQueryClient();
   const [qtyError, setQtyError] = React.useState(false);
@@ -75,7 +76,9 @@ const Cart = () => {
                 <Table.Summary.Cell index={1} colSpan={4}>
                   Grand Total
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={3}>{grandTotal}</Table.Summary.Cell>
+                <Table.Summary.Cell index={3}>
+                  <FormatPrice price={grandTotal} />
+                </Table.Summary.Cell>
               </Table.Summary.Row>
             </>
           );

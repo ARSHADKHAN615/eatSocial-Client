@@ -22,6 +22,7 @@ import {
 import { getFilterPosts } from "../../api";
 import { Link } from "react-router-dom";
 import NormalLoader from "../../components/NormalLoader";
+import FormatPrice from "../../components/FormatPrice";
 
 export const LikesCount = ({ data }) => {
   return (
@@ -32,7 +33,9 @@ export const LikesCount = ({ data }) => {
       </div>
       {data.price && (
         <div className="price">
-          <span>₹ {data.price}</span>
+          <span>
+            <FormatPrice price={data.price} />
+          </span>
         </div>
       )}
     </div>
@@ -57,7 +60,6 @@ const Explore = () => {
     },
   });
   const onFinish = (values) => {
-    console.log("Success:", values);
     const { search, price, orderOfPopularity, orderOfNewest, limit, sellable } =
       values;
     // make URL
@@ -95,6 +97,9 @@ const Explore = () => {
   return (
     <div className="explore">
       <div className="filter-Form">
+        <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
+          Explore What You Want
+        </h1>
         <Form
           className="filter-form"
           layout="vertical"
@@ -172,7 +177,7 @@ const Explore = () => {
         </Form>
       </div>
       <div className="search-list">
-        {isLoading &&  <NormalLoader /> }
+        {isLoading && <NormalLoader />}
         {filterData?.map((item) => (
           <Link to={`/post/${item.id}`} key={item.id} className="cards">
             <Card
@@ -183,7 +188,10 @@ const Explore = () => {
               }}
               cover={<img alt="example" src={item.img} />}
             >
-              <Meta title={item.title} description={item.desc.slice(0, 50) + "..."} />
+              <Meta
+                title={item.title}
+                description={item.desc.slice(0, 50) + "..."}
+              />
               <LikesCount data={item} />
             </Card>
           </Link>
