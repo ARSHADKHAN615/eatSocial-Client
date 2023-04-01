@@ -30,6 +30,7 @@ const Checkout = () => {
   const [form] = Form.useForm();
   const { cart, cartFetching: isFetching } = useCart();
   const [qtyError, setQtyError] = React.useState(false);
+  const [paymentLoading, setPaymentLoading] = React.useState(false);
   const navigate = useNavigate();
 
   // Place Order Mutation
@@ -79,6 +80,7 @@ const Checkout = () => {
 
   // Order Place Button
   const placeOrderBtn = async (data) => {
+    paymentLoading(true);
     if (data.payment_method === "2") {
       // If Payment method is COD
       placeOrder(data);
@@ -87,6 +89,7 @@ const Checkout = () => {
       const razorpayOrder = (await api.post("razorpayOrder", data)).data;
       initPayment(razorpayOrder, data);
     }
+    paymentLoading(false);
   };
 
   const initialValues = {
@@ -312,7 +315,7 @@ const Checkout = () => {
                   type="primary"
                   htmlType="submit"
                   size="large"
-                  loading={placeOrderLoading}
+                  loading={placeOrderLoading || paymentLoading}
                 >
                   Place Order
                 </Button>
