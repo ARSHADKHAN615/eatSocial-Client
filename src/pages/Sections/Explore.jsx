@@ -45,7 +45,7 @@ export const LikesCount = ({ data }) => {
 const Explore = () => {
   const marks = {
     0: "₹ 0",
-    1000: "₹ 1000",
+    90000: "₹ 90,000",
   };
 
   // Handle Filter Posts
@@ -138,7 +138,7 @@ const Explore = () => {
                       marks={marks}
                       tooltip={{ formatter: (value) => `₹ ${value}` }}
                       min={0}
-                      max={1000}
+                      max={90000}
                     />
                   </Form.Item>
                 </>

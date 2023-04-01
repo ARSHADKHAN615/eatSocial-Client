@@ -91,7 +91,9 @@ const Checkout = () => {
     }
     setPaymentLoading(false);
   };
-
+  const showErrors = () => {
+    message.error("Please fill all the required fields");
+  };
   const initialValues = {
     country: "IN",
   };
@@ -104,6 +106,7 @@ const Checkout = () => {
         form={form}
         initialValues={initialValues}
         onFinish={(values) => placeOrderBtn({ ...values, cart })}
+        onFinishFailed={() => showErrors()}
       >
         <Collapse defaultActiveKey={["1", "2"]} forceRender>
           <Panel header="Shipping Address" key="1">
