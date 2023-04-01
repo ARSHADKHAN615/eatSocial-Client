@@ -80,7 +80,7 @@ const Checkout = () => {
 
   // Order Place Button
   const placeOrderBtn = async (data) => {
-    paymentLoading(true);
+    setPaymentLoading(true);
     if (data.payment_method === "2") {
       // If Payment method is COD
       placeOrder(data);
@@ -89,7 +89,7 @@ const Checkout = () => {
       const razorpayOrder = (await api.post("razorpayOrder", data)).data;
       initPayment(razorpayOrder, data);
     }
-    paymentLoading(false);
+    setPaymentLoading(false);
   };
 
   const initialValues = {
