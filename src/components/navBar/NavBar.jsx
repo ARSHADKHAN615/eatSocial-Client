@@ -23,7 +23,7 @@ const NavBar = () => {
           onClick={toggle}
           style={{ cursor: "pointer" }}
         ></i>
-        <i className="ri-menu-line"></i>
+        {/* <i className="ri-menu-line"></i> */}
       </div>
       <div className="right">
         <Link to="/cart" style={{ textDecoration: "none", color: "inherit" }}>

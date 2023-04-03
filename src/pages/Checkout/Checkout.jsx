@@ -206,6 +206,10 @@ const Checkout = () => {
                     }))}
                     onChange={(value) => form.setFieldsValue({ state: "" })}
                     showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
                   />
                 </Form.Item>
                 <Form.Item
@@ -232,6 +236,10 @@ const Checkout = () => {
                           }))}
                           showSearch
                           disabled={!getFieldValue("country")}
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                          }
                         />
                       </Form.Item>
                     );
